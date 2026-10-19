@@ -1,0 +1,37 @@
+# Architecture gate for the demo repository (video beat 6b).
+# Runs the same `arcade-guard check` the agent calls in its loop; a FAIL exits 1
+# and fails the pull request's check.
+name: Architecture
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install arcade-agent
+        run: python -m pip install "arcade-agent[languages]==0.4.2"
+
+      - name: arcade-guard check
+        run: |
+          set -o pipefail
+          {
+            echo '## Architecture conformance'
+            echo '```'
+            status=0
+            arcade-guard check . || status=$?
+            echo '```'
+            exit $status
+          } | tee -a "$GITHUB_STEP_SUMMARY"
