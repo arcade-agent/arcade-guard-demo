@@ -1,0 +1,62 @@
+{
+  "algorithm": "pkg",
+  "rationale": "Package-based grouping (depth=4 after common prefix 'app') with dependency-affinity facade refinement (4 entities reassigned).",
+  "metadata": {},
+  "components": [
+    {
+      "name": "Api",
+      "responsibility": "Entities in api",
+      "entities": [
+        "app.api.orders_api.OrdersApi.get_order",
+        "app.api.orders_api.OrdersApi.place_order"
+      ]
+    },
+    {
+      "name": "Domain",
+      "responsibility": "Entities in domain",
+      "entities": [
+        "app.domain.order.Order",
+        "app.store.order_store.OrderStore.create"
+      ]
+    },
+    {
+      "name": "Service",
+      "responsibility": "Entities in service",
+      "entities": [
+        "app.api.orders_api.OrdersApi",
+        "app.api.orders_api.OrdersApi.__init__",
+        "app.service.order_service.OrderService",
+        "app.service.order_service.OrderService.get_order",
+        "app.service.order_service.OrderService.place_order"
+      ]
+    },
+    {
+      "name": "Store",
+      "responsibility": "Entities in store",
+      "entities": [
+        "app.service.order_service.OrderService.__init__",
+        "app.store.order_store.OrderStore",
+        "app.store.order_store.OrderStore.__init__",
+        "app.store.order_store.OrderStore._generate_id",
+        "app.store.order_store.OrderStore.get",
+        "app.store.order_store.OrderStore.save"
+      ]
+    }
+  ],
+  "metrics": {
+    "RCI": 0.6667,
+    "TurboMQ": 1.9667,
+    "BasicMQ": 0.4917,
+    "IntraConnectivity": 0.1583,
+    "InterConnectivity": 0.0583,
+    "TwoWayPairRatio": 0.0,
+    "DependencyHealth": 0.9679,
+    "ComponentBalance": 0.75,
+    "HubBalance": 0.6667,
+    "BoundaryClarity": 0.9167,
+    "DependencyDistribution": 0.625,
+    "SmellDiscipline": 1.0,
+    "PrincipleAlignmentScore": 0.8993,
+    "BalancedArchitectureScore": 0.7412
+  }
+}

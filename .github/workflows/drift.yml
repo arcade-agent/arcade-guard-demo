@@ -1,0 +1,41 @@
+# Architecture drift report for pull requests (video beat "Drift, caught in CI").
+# Diffs the recovered architecture against the baseline committed in .arcade/baseline.json
+# and posts the result as a PR comment. Informational: it never fails the build; the
+# separate Architecture workflow (arcade-guard check) is the gate.
+name: Architecture drift
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install arcade-agent
+        run: python -m pip install "arcade-agent[languages]==0.4.2"
+
+      - name: Diff the recovered architecture against the baseline
+        run: |
+          {
+            echo '## Architecture drift'
+            echo '```'
+            arcade-arch-diff --source . || true
+            echo '```'
+          } | tee drift.md
+
+      - name: Post the report on the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file drift.md
